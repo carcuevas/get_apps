@@ -5,8 +5,8 @@ PKG=bitwarden
 SRC_URL="https://vault.bitwarden.com/download/?app=desktop&platform=linux&variant=appimage"
 
 DEST_DIR="/opt/${PKG}"
-DEST_FILE=1password-latest.AppImage
-LINK=/bin/1password
+DEST_FILE=bitwarden
+LINK=/bin/bitwarden
 LIB_DIR=/usr/local/scripts/lib
 
 ### We get the file
@@ -20,7 +20,7 @@ mv ${DEST_DIR}/new_${DEST_FILE} ${DEST_DIR}/${DEST_FILE}
 chmod +x ${DEST_DIR}/${DEST_FILE}
 
 echo "We do the link to /bin/${PKG}.."
-ln -s ${DEST_DIR}/${DEST_FILE} /bin/${PKG}
+ln -s ${DEST_DIR}/${DEST_FILE} /bin/${PKG} 2>/dev/null
 
 echo "We install the icon in desktop ... "
 cp ${LIB_DIR}/icons/${PKG}.png ${DEST_DIR}/icon.png
