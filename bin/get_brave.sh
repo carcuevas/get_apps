@@ -33,13 +33,11 @@ echo "pacman -S gtk3 nss alsa-lib libxss ttf-font unzip"
 #### This script will get the specified version of Brave
 PKG=brave
 EXEC_FILE=brave
-SRC_URL="https://github.com/brave/brave-browser/releases/download/v${VERSION}/brave-v${VERSION}-linux-x64.zip"
+SRC_URL="https://github.com/brave/brave-browser/releases/download/v${VERSION}/brave-browser-${VERSION}-linux-amd64.zip"
 
 DEST_DIR="/opt/${PKG}_${VERSION}"
 LINK=/bin/${PKG}
 LIB_DIR=/usr/local/scripts/lib
-
-
 ### We get the file
 echo "We get the file..."
 mkdir -p $DEST_DIR 2>/dev/null
@@ -66,4 +64,3 @@ chmod +x ${DEST_DIR}/${DEST_FILE}
 echo "We install the icon in desktop ... "
 cp ${LIB_DIR}/icons/${PKG}.png ${DEST_DIR}/icon.png
 cp ${LIB_DIR}/brave-browser.desktop /usr/share/applications/
-
