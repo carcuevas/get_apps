@@ -108,7 +108,7 @@ Comment[zh_TW]=連線到網際網路
 StartupNotify=true
 StartupWMClass=brave-browser
 TryExec=brave
-Exec=brave %U
+Exec=brave %U --process-per-site
 Terminal=false
 Icon=/opt/brave/icon.png
 Type=Application
@@ -118,9 +118,9 @@ Actions=new-window;new-private-window;
 
 [Desktop Action new-window]
 Name=New Window
-Exec=brave
+Exec=brave --process-per-site 
 
 [Desktop Action new-private-window]
 Name=New Incognito Window
-Exec=brave --incognito
+Exec=brave --incognito --process-per-site 
 MimeType=x-scheme-handler/unknown;x-scheme-handler/about;text/html;text/xml;application/xhtml_xml;image/webp;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
