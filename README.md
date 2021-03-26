@@ -15,6 +15,7 @@ The destination path I have is `/opt` but it will create links in `/bin`  I coul
 * bitwarden  
 * brave
 * Microsoft Visual Code
+* Packer
 * Postman
 * Terraform
 
