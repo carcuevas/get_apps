@@ -26,3 +26,7 @@ echo "We install the icon in desktop ... "
 cp ${LIB_DIR}/icons/${PKG}.png ${DEST_DIR}/icon.png
 sed -e "s/_APP_/$PKG/g" < ${LIB_DIR}/_APP_.desktop > /usr/share/applications/${PKG}.desktop
 
+echo "Setting the permissions"
+chown root: ${DEST_DIR}/chrome-sandbox
+chmod 4755 ${DEST_DIR}/chrome-sandbox
+

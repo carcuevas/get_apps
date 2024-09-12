@@ -64,3 +64,7 @@ chmod +x ${DEST_DIR}/${DEST_FILE}
 echo "We install the icon in desktop ... "
 cp ${LIB_DIR}/icons/${PKG}.png ${DEST_DIR}/icon.png
 cp ${LIB_DIR}/brave-browser.desktop /usr/share/applications/
+
+chown root: ${DEST_DIR}/chrome-sandbox
+chmod 4755 ${DEST_DIR}/chrome-sandbox
+

@@ -26,7 +26,7 @@ VERSION=$1
 
 
 ### First we check if we have the version
-if [ -z "${VERSION}" ] ; then echo "No version specified...exiting ..." ; exit 1 ; fi
+#if [ -z "${VERSION}" ] ; then echo "No version specified...exiting ..." ; exit 1 ; fi
 
 
 
@@ -37,9 +37,11 @@ echo "pacman -S gtk3 nss libxkbfile gnupg libsecret gcc-libs libnotify glibc lso
 #### This script will get the specified version of Code
 PKG=code
 EXEC_FILE=code
-SRC_URL="https://update.code.visualstudio.com/${VERSION}/linux-x64/stable"
+#SRC_URL="https://update.code.visualstudio.com/${VERSION}/linux-x64/stable"
+SRC_URL="https://code.visualstudio.com/sha/download?build=stable&os=linux-x64"
 
-DEST_DIR="/opt/${PKG}_${VERSION}"
+#DEST_DIR="/opt/${PKG}_${VERSION}"
+DEST_DIR="/opt/${PKG}"
 LINK=/bin/${PKG}
 LIB_DIR=/usr/local/scripts/lib
 
@@ -78,3 +80,8 @@ cp ${LIB_DIR}/visual-studio-cod*desktop /usr/share/applications/
 
 echo "All good removing the compressed file"
 rm -r /opt/${PKG}.tar.gz 
+
+echo "Also we set some permissions"
+chown root: /opt/code/chrome-sandbox
+chmod 4755 /opt/code/chrome-sandbox
+
