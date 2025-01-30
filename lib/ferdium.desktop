@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Ferdium Name
+Comment=Ferdium
+Exec=/usr/local/bin/ferdium.AppImage
+Icon=/opt/ferdium/icon.png
+Terminal=false
+Type=Application
+Encoding=UTF-8
+Categories=Network;Application;
+StartupWMClass=zoom
+Name[en_US]=Ferdium messenger
