@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Winbox
+Comment=WinBox for Mikrotik
+Exec=/usr/local/bin/WinBox
+Icon=/opt/winbox/icon.png
+Terminal=false
+Type=Application
+Encoding=UTF-8
+Categories=Network;Application;Administration;
+StartupWMClass=zoom
+Name[en_US]=WinBox
