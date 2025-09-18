@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Tidal HIFI Name
+Comment=Tidal
+Exec=/usr/local/bin/tidal.AppImage
+Icon=/opt/tidal/icon.png
+Terminal=false
+Type=Application
+Encoding=UTF-8
+Categories=Multimedia;Application;
+Name[en_US]=Tidal HIFI
