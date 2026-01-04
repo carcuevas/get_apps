@@ -25,9 +25,9 @@ if [ -z "${VERSION}" ] ; then echo "No version specified...exiting ..." ; exit 1
 
 
 #### This script will get the specified version of Brave
-PKG=ferdium
-EXEC_FILE=ferdium.AppImage
-SRC_URL="https://github.com/ferdium/ferdium-app/releases/download/v${VERSION}/Ferdium-linux-Portable-${VERSION}-x86_64.AppImage"
+PKG=darktable
+EXEC_FILE=darktable.AppImage
+SRC_URL="https://github.com/darktable-org/darktable/releases/download/release-${VERSION}/Darktable-${VERSION}-x86_64.AppImage"
 
 DEST_DIR="/opt/${PKG}_${VERSION}"
 LINK=/bin/${PKG}
@@ -35,7 +35,7 @@ LIB_DIR=/usr/local/scripts/lib
 ### We get the file
 echo "We get the file..."
 mkdir -p $DEST_DIR 2>/dev/null
-wget -O ${DEST_DIR}/ferdium.AppImage  ${SRC_URL}
+wget -O ${DEST_DIR}/${EXEC_FILE}  ${SRC_URL}
 if [ "$?" -ne 0 ] ; then  rm -rf ${DEST_DIR} ; echo "Failed to download $PKG ..." ; exit 2 ; fi
 
 ## We are here so at least we do have downloaded properly the file
@@ -58,5 +58,5 @@ chmod +x ${DEST_DIR}/${DEST_FILE}
 chmod +x /usr/local/bin/${EXEC_FILE}
 echo "We install the icon in desktop ... "
 cp ${LIB_DIR}/icons/${PKG}.png ${DEST_DIR}/icon.png
-cp ${LIB_DIR}/ferdium.desktop /usr/share/applications/
+cp ${LIB_DIR}/${PKG}.desktop /usr/share/applications/
 

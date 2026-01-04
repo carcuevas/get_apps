@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Darktable Name
+Comment=Darktable
+Exec=/usr/local/bin/Darktable.AppImage
+Icon=/opt/darktable/icon.png
+Terminal=false
+Type=Application
+Encoding=UTF-8
+Terminal=false
+Categories=Graphics;2DGraphics;RasterGraphics;GT
+Name[en_US]=Darktable
