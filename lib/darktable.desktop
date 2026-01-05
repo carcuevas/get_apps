@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Darktable Name
 Comment=Darktable
-Exec=/usr/local/bin/Darktable.AppImage
+Exec=/usr/local/bin/darktable.AppImage
 Icon=/opt/darktable/icon.png
 Terminal=false
 Type=Application
