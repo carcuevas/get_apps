@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Drawio
+Comment=Drawio Desktop
+Exec=/usr/local/bin/drawio.AppImage
+Icon=/opt/drawio/icon.png
+Terminal=false
+Type=Application
+Encoding=UTF-8
+Terminal=false
+Categories=Graphics;2DGraphics;RasterGraphics;GT
+Name[en_US]=Drawio
