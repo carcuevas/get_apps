@@ -14,9 +14,14 @@ The destination path I have is `/opt` but it will create links in `/bin`  I coul
 * 1password
 * bitwarden  
 * brave
+* Darktable
+* Drawio-Desktop
+* Ferdium
 * Microsoft Visual Code
 * Packer
 * Postman
 * Terraform
+* Tidal
+* WinBox (beta for linux)
 
 
