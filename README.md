@@ -1,23 +1,42 @@
 # get_apps
 
 ## Intro
-To get some applications in Arch directly from the Applications Official Repos
+This started when I was using Arch linux, and not trusting some AUR repos, so I got the files myself from the official repos (many times from the official github)  and so. Now even using other repos, I think
+it is quite comfortable for me to use....
 
-Actually since I am not trusting much in the AUR repos, I decided to do some stupid scripts for getting the software I need directly from the source of those applications.
+## How it works
+It automatically fetches the pacakges with the specified version (1pasword/bitwarden are taking the latest version so no need to specify it), so for example if I want to get 
+the last version of bitwarden, I just need to execute:
 
-I have just done this in not 1h time, so whenever I have time I will improve all these repetitive code and so, now I just wanted to get the software fast ... :) 
+```
+sudo get_bitwarden.sh 
 
+```
+And it will create the `/opt/bitwarden` and download there the packages, then after it will create the menu for desktop, and shortcut with the icon. 
 
-The destination path I have is `/opt` it will create links in `/usr/local/bin` ... So don't forget to add the `export PATH=$PATH:/usr/local/bin` in your .profile/.bashrc/.zshrc :) 
+For example if you want to get the Tidal Hi-Fi version 6.0.1, just run:
+
+```
+sudo get_tidal.sh 6.0.1
+
+```
+
+and that's it :) 
+
+**NOTE:** The destination path I have is `/opt` it will create links in `/usr/local/bin` ... So don't forget to add the `export PATH=$PATH:/usr/local/bin` in your .profile/.bashrc/.zshrc :) 
+
 
 ## What software I have at the moment 
 * 1password
 * bitwarden  
 * brave
-* logcli (from Grafana)
+* Darktable
+* Drawio-Desktop
+* Ferdium
+* Logcli (From Grafana)
 * Microsoft Visual Code
 * Packer
 * Postman
 * Terraform
-
-
+* Tidal hi-Fi for Linux
+* WinBox (beta for linux)
