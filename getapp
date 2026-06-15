@@ -1,0 +1,93 @@
+#!/bin/bash
+# getapp — install applications from official sources
+# Usage:
+#   getapp <app> [-v VERSION] [--dry-run]
+#   getapp list
+#   getapp update [<app>] [--dry-run]
+
+set -euo pipefail
+
+# Resolve symlinks so the script works when symlinked into PATH
+_src="${BASH_SOURCE[0]}"
+while [ -L "$_src" ]; do
+    _dir="$(cd -P "$(dirname "$_src")" && pwd)"
+    _src="$(readlink "$_src")"
+    [[ "$_src" != /* ]] && _src="${_dir}/${_src}"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$_src")" && pwd)"
+
+LIB_DIR="${SCRIPT_DIR}/lib"
+APPS_DIR="${SCRIPT_DIR}/apps"
+
+# shellcheck source=lib/common.sh
+source "${LIB_DIR}/common.sh"
+
+# ── Argument parsing ──────────────────────────────────────────────────────────
+
+usage() {
+    cat <<EOF
+Usage:
+  $(basename "$0") <app> [-v VERSION] [--dry-run]
+  $(basename "$0") list
+  $(basename "$0") update [<app>] [--dry-run]
+
+Options:
+  -v, --version VERSION   Install a specific version (default: latest)
+  --dry-run               Show what would happen without making any changes
+EOF
+    exit 1
+}
+
+[ $# -eq 0 ] && usage
+
+DRY_RUN=false
+VERSION=""
+APP=""
+SUBCOMMAND=""
+
+case "$1" in
+    list)      list_apps; exit 0 ;;
+    update)    SUBCOMMAND=update; shift ;;
+    -h|--help) usage ;;
+    -*)        usage ;;
+    *)         APP="$1"; shift ;;
+esac
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -v|--version) VERSION="$2"; shift 2 ;;
+        --dry-run)    DRY_RUN=true; shift ;;
+        -h|--help)    usage ;;
+        *)
+            if [ -z "$APP" ]; then APP="$1"; shift
+            else echo "Unknown option: $1"; usage
+            fi
+            ;;
+    esac
+done
+
+if [ "$SUBCOMMAND" = "update" ] && [ -z "$APP" ]; then
+    update_all
+    exit 0
+fi
+
+[ -z "$APP" ] && usage
+
+# ── Load app config ───────────────────────────────────────────────────────────
+
+APP_CONFIG="${APPS_DIR}/${APP}.sh"
+if [ ! -f "$APP_CONFIG" ]; then
+    echo "Unknown app: '${APP}'"
+    echo "Run '$(basename "$0") list' to see available apps."
+    exit 1
+fi
+
+reset_app_config
+# shellcheck source=/dev/null
+source "$APP_CONFIG"
+
+# ── Detect platform and install ───────────────────────────────────────────────
+
+detect_platform
+set_install_paths
+install_app

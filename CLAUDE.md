@@ -6,51 +6,72 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **get_apps** is a collection of Bash scripts for installing desktop applications on Linux (and in MacOS in the future) directly from official sources — a safer alternative to AUR and other thigns. Each script in `bin/` handles one application end-to-end.
 
-## No Build or Test System
+## Running and testing
 
-There is no Makefile, package.json, or test suite. Scripts are executed directly as root. The GitHub Actions workflow (`.github/workflows/blank.yml`) is a placeholder stub — not functional.
+No build system. The main entry point is `getapp` at the repo root:
 
-To run a script:
 ```bash
-sudo ./bin/get_bitwarden.sh         # no version arg needed
-sudo ./bin/get_terraform.sh 1.8.0   # version required as $1
+sudo ./getapp terraform              # installs latest version automatically
+sudo ./getapp terraform -v 1.8.0    # installs a specific version
+./getapp list                        # list all available apps
+./getapp terraform --dry-run         # show what would happen, no changes made
 ```
 
-To lint shell scripts (if shellcheck is available):
+To lint:
 ```bash
-shellcheck bin/*.sh
+shellcheck getapp lib/common.sh apps/*.sh
 ```
 
-## Script Anatomy
+## Architecture
 
-Every script follows the same pattern:
-1. Download from official source (GitHub releases or vendor CDN)
-2. Extract to `/opt/{app}` or `/opt/{app}_{version}` (symlinked to `/opt/{app}`)
-3. Copy icon from `lib/icons/{app}.png` to `/opt/{app}/icon.png`
-4. Write a `.desktop` file to `/usr/share/applications/` (some use `lib/_APP_.desktop` as a template via `sed`)
-5. Symlink binary into `/bin/` or `/usr/local/bin/`
-6. Set special permissions if needed (e.g., `chrome-sandbox` for Electron apps)
+```
+getapp          # single entry point — argument parsing, loads app config, calls install_app()
+lib/
+  common.sh     # all shared logic: platform detection, download, extract, symlinks, desktop, version helpers
+  icons/        # app icons (PNG)
+  *.desktop     # desktop menu entry files
+  _APP_.desktop # sed template for apps without a custom .desktop
+apps/
+  terraform.sh  # per-app config: ~10 lines of variables + url_{os}_{arch}() functions
+  ...           # one file per app
+```
 
-## Two Download Patterns
+`getapp` sources `lib/common.sh` then the chosen `apps/{app}.sh`, detects platform, and calls `install_app()` from common.sh.
 
-- **Latest-version scripts** — fetch the current release automatically: `get_bitwarden.sh`, `get_1password.sh`, `get_logcli.sh`
-- **Version-pinned scripts** — require a version string as `$1`: `get_terraform.sh`, `get_packer.sh`, `get_postman.sh`, `get_tidal.sh`, `get_code.sh`
+## How install_app() works
 
-## Key Paths
+1. If `get_latest()` is defined in the app config — fetch latest version via API
+2. If still no version and `VERSIONED=true` — die with "requires a version"
+3. Call `url_{OS}_{ARCH}()` from app config to build the download URL; die if function missing (platform not supported)
+4. Download to `/tmp/`, extract, move to `DEST_DIR`
+5. If `post_extract()` defined in app config — called with `(TMP_EXTRACT, DEST_DIR)` for custom renames
+6. Create versioned symlink `/opt/{pkg}` → `/opt/{pkg}_{version}` (if `VERSIONED=true`)
+7. Symlink binary into `BIN_DIR`
+8. Install desktop entry + chrome-sandbox perms if needed
+9. If `post_install()` defined — called for any extra steps (e.g. VS Code's second `.desktop` file)
 
-| Purpose | Path |
-|---|---|
-| Install root | `/opt/{app}` |
-| CLI symlinks | `/usr/local/bin/{app}` or `/bin/{app}` |
-| Desktop entries | `/usr/share/applications/{app}.desktop` |
-| Icon source | `lib/icons/{app}.png` |
-| Desktop template | `lib/_APP_.desktop` |
+## Install paths by OS
 
-## Adding a New Application Script
+| | Linux | macOS |
+|---|---|---|
+| App root | `/opt/{app}_{ver}` | `/usr/local/opt/{app}_{ver}` |
+| Binary | `/usr/local/bin/{app}` | `/usr/local/bin/{app}` |
+| Desktop | `/usr/share/applications/` | (skipped) |
 
-Use any existing script as a reference. Key things to get right:
-- Fail fast with `exit 1`/`exit 2`/`exit 3` on download/extract failures
-- Use `sed` on `lib/_APP_.desktop` for the desktop entry, or write a custom one in `lib/`
-- Add the app's icon as a PNG to `lib/icons/`
-- Use `/opt/{app}` as the install prefix; symlink to `/opt/{app}_{version}` if versioned
-- For Electron apps: `chmod 4755 /opt/{app}/chrome-sandbox` after install
+## App config variables
+
+| Variable | Required | Default | Notes |
+|---|---|---|---|
+| `PKG` | yes | — | install dir name and binary symlink name |
+| `EXEC_FILE` | yes | — | actual executable filename inside install dir |
+| `ARCHIVE_FORMAT` | yes | — | `tar.gz`, `zip`, or `appimage` |
+| `VERSIONED` | no | `true` | `false` for always-latest apps (bitwarden, 1password) |
+| `NEEDS_DESKTOP` | no | `false` | installs `.desktop` entry on Linux |
+| `NEEDS_CHROME_SANDBOX` | no | `false` | sets setuid root on `chrome-sandbox` (Electron apps) |
+
+## Adding a new app
+
+1. Create `apps/{name}.sh` — set the variables above, define `get_latest()` (or omit if version always required), define `url_linux_amd64()` and any other supported platform functions
+2. Add icon PNG to `lib/icons/{name}.png`
+3. Add a custom `.desktop` file to `lib/` if the generic template isn't sufficient
+4. Test: `./getapp {name} --dry-run`
