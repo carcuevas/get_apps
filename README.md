@@ -17,17 +17,17 @@ This started when I was using Arch Linux and not trusting some AUR repos, so I g
 Scripts handle downloading, extracting, symlinking, and desktop integration automatically. Some auto-fetch the latest release — no version needed:
 
 ```bash
-sudo get_bitwarden.sh
-sudo get_1password.sh
-sudo get_logcli.sh
+sudo ./getapp bitwarden
+sudo ./getapp 1password
+sudo ./getapp logcli
 ```
 
-Others require a version string:
+Others require a version string with `-v`:
 
 ```bash
-sudo get_tidal.sh 6.0.1
-sudo get_terraform.sh 1.8.0
-sudo get_postman.sh 11.0.0
+sudo ./getapp tidal -v 6.0.1
+sudo ./getapp terraform -v 1.8.0
+sudo ./getapp postman -v 11.0.0
 ```
 
 Each script installs to `/opt/{app}`, creates a symlink in `/usr/local/bin`, and sets up the desktop menu entry with icon. Don't forget to add `/usr/local/bin` to your PATH if it's not there already:
@@ -43,10 +43,9 @@ export PATH=$PATH:/usr/local/bin   # add to ~/.bashrc or ~/.zshrc
 | 1Password          | ✅          | 🔜          | 🔜          | 🔜          |
 | Bitwarden          | ✅ AppImage | —           | 🔜          | 🔜          |
 | Brave              | ✅          | 🔜          | 🔜          | 🔜          |
-| Brave Nightly      | ✅          | 🔜          | 🔜          | 🔜          |
 | Darktable          | ✅          | 🔜          | 🔜          | 🔜          |
 | Draw.io Desktop    | ✅          | 🔜          | 🔜          | 🔜          |
-| Ferdium            | ✅ AppImage | —           | 🔜          | 🔜          |
+| Ferdium            | ✅ AppImage | 🔜          | 🔜          | 🔜          |
 | Logcli (Grafana)   | ✅          | 🔜          | 🔜          | 🔜          |
 | Packer             | ✅          | 🔜          | 🔜          | 🔜          |
 | Postman            | ✅          | 🔜          | 🔜          | 🔜          |
