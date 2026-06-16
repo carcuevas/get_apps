@@ -30,7 +30,7 @@ sudo ./getapp terraform -v 1.8.0
 sudo ./getapp postman -v 11.0.0
 ```
 
-Each script installs to `/opt/{app}`, creates a symlink in `/usr/local/bin`, and sets up the desktop menu entry with icon. Don't forget to add `/usr/local/bin` to your PATH if it's not there already:
+Scripts install to `/opt/{app}` on Linux or `/usr/local/opt/{app}` on macOS, create a symlink in `/usr/local/bin`, and set up the desktop menu entry with icon on Linux. Don't forget to add `/usr/local/bin` to your PATH if it's not there already:
 
 ```bash
 export PATH=$PATH:/usr/local/bin   # add to ~/.bashrc or ~/.zshrc
@@ -46,12 +46,13 @@ export PATH=$PATH:/usr/local/bin   # add to ~/.bashrc or ~/.zshrc
 | Darktable          | ✅          | 🔜          | 🔜          | 🔜          |
 | Draw.io Desktop    | ✅          | 🔜          | 🔜          | 🔜          |
 | Ferdium            | ✅ AppImage | 🔜          | 🔜          | 🔜          |
-| Logcli (Grafana)   | ✅          | 🔜          | 🔜          | 🔜          |
-| Packer             | ✅          | 🔜          | 🔜          | 🔜          |
+| Logcli (Grafana)   | ✅          | ✅          | ✅          | ✅          |
+| Packer             | ✅          | ✅          | ✅          | ✅          |
 | Postman            | ✅          | 🔜          | 🔜          | 🔜          |
-| Terraform          | ✅          | 🔜          | 🔜          | 🔜          |
+| Terraform          | ✅          | ✅          | ✅          | ✅          |
 | Tidal Hi-Fi        | ✅ AppImage | —           | —           | —           |
 | VS Code            | ✅          | 🔜          | 🔜          | 🔜          |
-| WinBox             | ✅          | 🔜          | 🔜          | 🔜          |
+| WinBox             | ✅          | —           | ✅ †        | ✅ †        |
 
-✅ = working · 🔜 = planned · — = not applicable (AppImage / no official package)
+✅ = working · 🔜 = planned · — = not available from vendor  
+† WinBox macOS is a universal binary (Intel + Apple Silicon) in a single DMG

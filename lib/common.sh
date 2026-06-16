@@ -155,6 +155,7 @@ install_app() {
     fi
 
     local fmt="${ARCHIVE_FORMAT:-tar.gz}"
+    [[ "$SRC_URL" == *.dmg ]] && fmt="dmg"
     local TMP_ARCHIVE="/tmp/${PKG}_${VERSION:-latest}.${fmt}"
     local TMP_EXTRACT="/tmp/${PKG}_extract_$$"
 
@@ -180,6 +181,26 @@ install_app() {
         mkdir -p "$DEST_DIR"
         download "$SRC_URL" "${DEST_DIR}/${EXEC_FILE}"
         chmod +x "${DEST_DIR}/${EXEC_FILE}"
+    elif [ "$fmt" = "dmg" ]; then
+        local TMP_MOUNT="/tmp/${PKG}_mnt_$$"
+        mkdir -p "$TMP_MOUNT"
+        download "$SRC_URL" "$TMP_ARCHIVE"
+        hdiutil attach -nobrowse -quiet "$TMP_ARCHIVE" -mountpoint "$TMP_MOUNT" \
+            || die "Failed to mount DMG"
+        local app_src
+        app_src=$(find "$TMP_MOUNT" -maxdepth 1 -name "*.app" | head -1)
+        [ -z "$app_src" ] && { hdiutil detach "$TMP_MOUNT" 2>/dev/null; die "No .app bundle in DMG"; }
+        rm -rf "$DEST_DIR"
+        mkdir -p "$DEST_DIR"
+        cp -r "$app_src" "$DEST_DIR/"
+        hdiutil detach "$TMP_MOUNT" -quiet 2>/dev/null || true
+        rm -rf "$TMP_MOUNT" "$TMP_ARCHIVE"
+        local app_name
+        app_name=$(basename "$app_src")
+        local inner_bin
+        inner_bin=$(find "$DEST_DIR/${app_name}/Contents/MacOS" -maxdepth 1 -type f | head -1)
+        [ -n "$inner_bin" ] && EXEC_FILE="${app_name}/Contents/MacOS/$(basename "$inner_bin")"
+        declare -f post_extract &>/dev/null && post_extract "$DEST_DIR" "$DEST_DIR"
     else
         mkdir -p "$TMP_EXTRACT"
         download "$SRC_URL" "$TMP_ARCHIVE"
