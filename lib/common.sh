@@ -176,11 +176,12 @@ install_app() {
 
     log "Installing ${APP} ${VERSION:-latest} (${OS}/${ARCH})..."
 
-    # AppImage — place directly, no extraction
+    # AppImage — download to tmp first, then mv (avoids "Text file busy" on running apps)
     if [ "$fmt" = "appimage" ]; then
         mkdir -p "$DEST_DIR"
-        download "$SRC_URL" "${DEST_DIR}/${EXEC_FILE}"
-        chmod +x "${DEST_DIR}/${EXEC_FILE}"
+        download "$SRC_URL" "$TMP_ARCHIVE"
+        chmod +x "$TMP_ARCHIVE"
+        mv "$TMP_ARCHIVE" "${DEST_DIR}/${EXEC_FILE}"
     elif [ "$fmt" = "dmg" ]; then
         local TMP_MOUNT="/tmp/${PKG}_mnt_$$"
         mkdir -p "$TMP_MOUNT"

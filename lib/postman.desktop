@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Postman
+Comment=API Development Environment
+Exec=/usr/local/bin/postman
+Icon=/opt/postman/icon.png
+Terminal=false
+Type=Application
+StartupNotify=true
+StartupWMClass=postman
+Categories=Development;WebDevelopment;

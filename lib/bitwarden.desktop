@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Bitwarden
+Comment=Password Manager
+Exec=/usr/local/bin/bitwarden %U
+Icon=/opt/bitwarden/icon.png
+Terminal=false
+Type=Application
+StartupNotify=true
+StartupWMClass=Bitwarden
+Categories=Utility;Security;
+MimeType=x-scheme-handler/bitwarden;
