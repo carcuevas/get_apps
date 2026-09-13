@@ -49,7 +49,7 @@ export PATH=$PATH:/usr/local/bin   # add to ~/.bashrc or ~/.zshrc
 | Logcli (Grafana)   | ✅          | ✅          | ✅          | ✅          |
 | Packer             | ✅          | ✅          | ✅          | ✅          |
 | Postman            | ✅          | 🔜          | 🔜          | 🔜          |
-| Slack CLI          | ✅          | ✅          | 🔜          | 🔜          |
+| Slacky             | —           | ✅ AppImage | —           | —           |
 | Terraform          | ✅          | ✅          | ✅          | ✅          |
 | Tidal Hi-Fi        | ✅ AppImage | —           | —           | —           |
 | VS Code            | ✅          | 🔜          | 🔜          | 🔜          |
