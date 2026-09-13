@@ -64,7 +64,7 @@ apps/
 |---|---|---|---|
 | `PKG` | yes | — | install dir name and binary symlink name |
 | `EXEC_FILE` | yes | — | actual executable filename inside install dir |
-| `ARCHIVE_FORMAT` | yes | — | `tar.gz`, `zip`, or `appimage` |
+| `ARCHIVE_FORMAT` | yes | — | `tar.gz`, `zip`, `appimage`, or `deb`. Default/fallback only — if `url_{os}_{arch}()` ends in a recognized extension (`.tar.gz`, `.zip`, `.AppImage`, `.deb`, `.dmg`), that wins. Lets one app ship a different format per arch (e.g. AppImage on amd64, `.deb` on arm64). `.deb` extraction pulls the `data.tar.*` payload out of the package via `ar`/`tar` — no `dpkg` required. |
 | `VERSIONED` | no | `true` | `false` for always-latest apps (bitwarden, 1password) |
 | `NEEDS_DESKTOP` | no | `false` | installs `.desktop` entry on Linux |
 | `NEEDS_CHROME_SANDBOX` | no | `false` | sets setuid root on `chrome-sandbox` (Electron apps) |

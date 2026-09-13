@@ -62,6 +62,17 @@ extract_archive() {
     case "$file" in
         *.tar.gz|*.tgz) tar -xzf "$file" -C "$dest" || die "Failed to extract $file" ;;
         *.zip)           unzip -q  "$file" -d "$dest" || die "Failed to extract $file" ;;
+        *.deb)
+            command -v ar &>/dev/null || die "ar (binutils) is required to extract .deb packages"
+            local deb_tmp
+            deb_tmp=$(mktemp -d)
+            (cd "$deb_tmp" && ar x "$file") || { rm -rf "$deb_tmp"; die "Failed to extract $file"; }
+            local data_tar
+            data_tar=$(find "$deb_tmp" -maxdepth 1 -name 'data.tar.*' | head -1)
+            [ -z "$data_tar" ] && { rm -rf "$deb_tmp"; die "No data.tar.* found inside $file"; }
+            tar -xf "$data_tar" -C "$dest" || { rm -rf "$deb_tmp"; die "Failed to extract $data_tar"; }
+            rm -rf "$deb_tmp"
+            ;;
         *)               die "Unknown archive format: $file" ;;
     esac
 }
@@ -98,6 +109,9 @@ set_chrome_sandbox() {
         dlog "Sandbox: chown root + chmod 4755 ${DEST_DIR}/chrome-sandbox"
         return
     fi
+    # Some archive layouts (e.g. a raw AppImage) don't ship a separate
+    # chrome-sandbox binary — sandboxing is bundled inside instead.
+    [ -f "${DEST_DIR}/chrome-sandbox" ] || return
     chown root: "${DEST_DIR}/chrome-sandbox"
     chmod 4755  "${DEST_DIR}/chrome-sandbox"
 }
@@ -154,8 +168,17 @@ install_app() {
         DEST_DIR="${INSTALL_BASE}/${PKG}"
     fi
 
+    # Prefer the extension on the actual URL over the app's static default —
+    # some apps ship a different archive type per architecture (e.g. an
+    # AppImage on amd64 but a .deb on arm64).
     local fmt="${ARCHIVE_FORMAT:-tar.gz}"
-    [[ "$SRC_URL" == *.dmg ]] && fmt="dmg"
+    case "$SRC_URL" in
+        *.dmg)                  fmt="dmg" ;;
+        *.deb)                  fmt="deb" ;;
+        *.[Aa]pp[Ii]mage)       fmt="appimage" ;;
+        *.tar.gz|*.tgz)         fmt="tar.gz" ;;
+        *.zip)                  fmt="zip" ;;
+    esac
     local TMP_ARCHIVE="/tmp/${PKG}_${VERSION:-latest}.${fmt}"
     local TMP_EXTRACT="/tmp/${PKG}_extract_$$"
 
