@@ -1,42 +1,59 @@
 # get_apps
 
 ## Intro
-This started when I was using Arch linux, and not trusting some AUR repos, so I got the files myself from the official repos (many times from the official github)  and so. Now even using other repos, I think
-it is quite comfortable for me to use....
+
+This started when I was using Arch Linux and not trusting some AUR repos, so I grabbed the files myself from the official sources (many times straight from the official GitHub). Now the idea is to take this further and support **Linux and macOS** on both **AMD64 and ARM64** — always using official packages only, no third-party repos.
+
+> Apps distributed as `.AppImage` are Linux-only by nature and won't be ported to macOS.
+
+## Prerequisites
+
+- `bash`, `wget` or `curl`
+- `tar`, `unzip`
+- `sudo` access
 
 ## How it works
-It automatically fetches the pacakges with the specified version (1pasword/bitwarden are taking the latest version so no need to specify it), so for example if I want to get 
-the last version of bitwarden, I just need to execute:
 
-```
-sudo get_bitwarden.sh 
+Scripts handle downloading, extracting, symlinking, and desktop integration automatically. Some auto-fetch the latest release — no version needed:
 
-```
-And it will create the `/opt/bitwarden` and download there the packages, then after it will create the menu for desktop, and shortcut with the icon. 
-
-For example if you want to get the Tidal Hi-Fi version 6.0.1, just run:
-
-```
-sudo get_tidal.sh 6.0.1
-
+```bash
+sudo ./getapp bitwarden
+sudo ./getapp 1password
+sudo ./getapp logcli
 ```
 
-and that's it :) 
+Others require a version string with `-v`:
 
-**NOTE:** The destination path I have is `/opt` it will create links in `/usr/local/bin` ... So don't forget to add the `export PATH=$PATH:/usr/local/bin` in your .profile/.bashrc/.zshrc :) 
+```bash
+sudo ./getapp tidal -v 6.0.1
+sudo ./getapp terraform -v 1.8.0
+sudo ./getapp postman -v 11.0.0
+```
 
+Scripts install to `/opt/{app}` on Linux or `/usr/local/opt/{app}` on macOS, create a symlink in `/usr/local/bin`, and set up the desktop menu entry with icon on Linux. Don't forget to add `/usr/local/bin` to your PATH if it's not there already:
 
-## What software I have at the moment 
-* 1password
-* bitwarden  
-* brave
-* Darktable
-* Drawio-Desktop
-* Ferdium
-* Logcli (From Grafana)
-* Microsoft Visual Code
-* Packer
-* Postman
-* Terraform
-* Tidal hi-Fi for Linux
-* WinBox (beta for linux)
+```bash
+export PATH=$PATH:/usr/local/bin   # add to ~/.bashrc or ~/.zshrc
+```
+
+## Platform & Architecture Support
+
+| Application        | Linux AMD64 | Linux ARM64 | macOS AMD64 | macOS ARM64 |
+|--------------------|:-----------:|:-----------:|:-----------:|:-----------:|
+| 1Password          | ✅          | 🔜          | 🔜          | 🔜          |
+| Bitwarden          | ✅ AppImage | —           | 🔜          | 🔜          |
+| Brave              | ✅          | 🔜          | 🔜          | 🔜          |
+| Darktable          | ✅          | 🔜          | 🔜          | 🔜          |
+| Draw.io Desktop    | ✅          | 🔜          | 🔜          | 🔜          |
+| Ferdium            | ✅ AppImage | 🔜          | 🔜          | 🔜          |
+| Logcli (Grafana)   | ✅          | ✅          | ✅          | ✅          |
+| Packer             | ✅          | ✅          | ✅          | ✅          |
+| Postman            | ✅          | 🔜          | 🔜          | 🔜          |
+| Slacky             | —           | ✅ AppImage | —           | —           |
+| Terraform          | ✅          | ✅          | ✅          | ✅          |
+| Tidal Hi-Fi        | ✅ AppImage | —           | —           | —           |
+| VS Code            | ✅          | 🔜          | 🔜          | 🔜          |
+| WinBox             | ✅          | —           | ✅ †        | ✅ †        |
+
+✅ = working · 🔜 = planned · — = not available from vendor  
+† WinBox macOS is a universal binary (Intel + Apple Silicon) in a single DMG
